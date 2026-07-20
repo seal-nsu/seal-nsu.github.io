@@ -1,0 +1,94 @@
+{
+  "lab": {
+    "name": "SEAL",
+    "fullName": "Systems on Embodied AI Lab",
+    "university": "North South University, Dhaka",
+    "tagline": "Building intelligent systems that sense, move, and act in the physical world.",
+    "mission": "SEAL researches the systems that let artificial intelligence step off the screen and into the physical world \u2014 from perception and control to learning in embodied agents. We work at the intersection of robotics, machine learning, and systems design.",
+    "email": "seal.lab@northsouth.edu",
+    "address": "North South University, Bashundhara, Dhaka, Bangladesh",
+    "mapCoordinates": {
+      "lat": 23.81508081618213,
+      "lng": 90.42648623196062
+    }
+  },
+  "focusAreas": [
+    "Embodied AI & Robot Learning",
+    "Perception & Control Systems",
+    "Reinforcement Learning",
+    "Human-Robot Interaction"
+  ],
+  "members": {
+    "faculty": [
+      {
+        "name": "Dr. Mohammad Ashrafuzzaman Khan",
+        "role": "Associate Professor, Lab Director"
+      },
+      {
+        "name": "Dr. Mohammad Abdul Qayum",
+        "role": "Faculty Member"
+      },
+      {
+        "name": "Dr. Mohsin Sajjad",
+        "role": "Faculty Member"
+      }
+    ],
+    "researchAssistants": [
+      { "name": "Ahmed Faizul Haque Dhrubo", "role": "Research Assistant" },
+      { "name": "Souvik Pramanik", "role": "Research Assistant" },
+      { "name": "Asadullah Hil Galib", "role": "Research Assistant" },
+      { "name": "Saif Ahmed", "role": "Research Assistant" }
+    ]
+  },
+  "projects": [
+    {
+      "title": "Project Title Placeholder One",
+      "status": "Ongoing",
+      "description": "A short placeholder description of this research project goes here. Explain the problem, the approach, and what makes it interesting \u2014 this text expands when the title is clicked.",
+      "demoUrl": "",
+      "githubUrl": ""
+    },
+    {
+      "title": "Project Title Placeholder Two",
+      "status": "Completed",
+      "description": "Another placeholder description. Replace this with a summary of the project's goals, methods, and outcomes.",
+      "demoUrl": "",
+      "githubUrl": ""
+    },
+    {
+      "title": "Project Title Placeholder Three",
+      "status": "Ongoing",
+      "description": "Placeholder text describing a third project. Swap this out with real content whenever it's ready.",
+      "demoUrl": "",
+      "githubUrl": ""
+    }
+  ],
+  "publications": [
+    {
+      "title": "Publication Title Placeholder One",
+      "authors": "A. Author, B. Author, C. Author",
+      "venue": "Conference / Journal Name",
+      "year": "2026",
+      "pdfUrl": "",
+      "doiUrl": ""
+    },
+    {
+      "title": "Publication Title Placeholder Two",
+      "authors": "A. Author, B. Author",
+      "venue": "Conference / Journal Name",
+      "year": "2025",
+      "pdfUrl": "",
+      "doiUrl": ""
+    }
+  ],
+  "news": [
+    {
+      "date": "2026-07-01",
+      "text": "Placeholder news item \u2014 replace with a real lab update, publication, or event."
+    },
+    {
+      "date": "2026-05-14",
+      "text": "Another placeholder announcement goes here."
+    }
+  ]
+}
