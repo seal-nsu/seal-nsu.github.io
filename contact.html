@@ -1,61 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact — SEAL | North South University</title>
-<meta name="description" content="Get in touch with the Systems on Embodied AI Lab at North South University.">
-<link rel="icon" href="logo1.png" type="image/png">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — SEAL | North South University</title>
+  <meta name="description" content="Get in touch with SEAL, the Systems on Embodied AI Lab at North South University, Dhaka.">
+  <link rel="icon" href="logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body data-page="contact">
 
-<div id="header-slot"></div>
+  <div id="header-slot"></div>
 
-<main>
-  <div class="page-header">
-    <div class="wrap">
-      <div class="breadcrumb"><a href="index.html">Home</a> / Contact</div>
-      <h1>Contact</h1>
-      <p class="lede">Interested in collaborating, joining the lab, or learning more about our work? Send us a message.</p>
-    </div>
-  </div>
+  <main>
 
-  <section class="section" style="border-bottom:none;">
-    <div class="wrap">
-      <div class="contact-grid">
-        <div class="contact-info">
-          <p>We read every message and typically respond within a few business days.</p>
-          <div class="contact-detail">
-            <div class="contact-detail-row"><span class="k">Email</span><span class="v"><a id="contact-email" href="#"></a></span></div>
-            <div class="contact-detail-row"><span class="k">Address</span><span class="v" id="contact-address-detail"></span></div>
+    <section class="page-header band-dark">
+      <div class="wrap">
+        <div class="breadcrumb"><a href="index.html">Home</a> / Contact</div>
+        <span class="tag-label mono">Get in Touch</span>
+        <h1 style="margin-top:16px;">Contact the lab</h1>
+        <p class="lede">Prospective students, collaborators, and press inquiries are all welcome.</p>
+      </div>
+    </section>
+
+    <section class="section" style="border-bottom:none;">
+      <div class="wrap">
+        <div class="contact-grid">
+
+          <div class="contact-info">
+            <p>Reach out about research collaborations, graduate supervision, undergraduate research
+              opportunities, or media inquiries. We typically reply within a few business days.</p>
+
+            <div class="contact-detail">
+              <div class="contact-detail-row">
+                <span class="k">Email</span>
+                <a class="v" id="contact-email" href="mailto:"></a>
+              </div>
+              <div class="contact-detail-row">
+                <span class="k">Address</span>
+                <span class="v" id="contact-address-detail"></span>
+              </div>
+              <div class="contact-detail-row">
+                <span class="k">Department</span>
+                <span class="v">Electrical &amp; Computer Engineering</span>
+              </div>
+            </div>
           </div>
+
+          <form class="contact-form" id="contact-form">
+            <div>
+              <label for="cf-name">Name</label>
+              <input type="text" id="cf-name" name="name" required>
+            </div>
+            <div>
+              <label for="cf-email">Email</label>
+              <input type="email" id="cf-email" name="email" required>
+            </div>
+            <div>
+              <label for="cf-message">Message</label>
+              <textarea id="cf-message" name="message" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="align-self:flex-start;">Send Message</button>
+          </form>
+
         </div>
-        <form class="contact-form" id="contact-form">
-          <div>
-            <label for="cf-name">Name</label>
-            <input type="text" id="cf-name" name="name" required>
-          </div>
-          <div>
-            <label for="cf-email">Email</label>
-            <input type="email" id="cf-email" name="email" required>
-          </div>
-          <div>
-            <label for="cf-message">Message</label>
-            <textarea id="cf-message" name="message" rows="5" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Send Message</button>
-        </form>
-      </div>
-      <div class="map-embed">
-        <iframe id="map-iframe" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-      </div>
-    </div>
-  </section>
-</main>
 
-<div id="footer-slot"></div>
+        <div class="map-embed">
+          <iframe id="map-iframe" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </section>
 
-<script src="main.js"></script>
+  </main>
+
+  <div id="footer-slot"></div>
+
+  <script src="main.js"></script>
 </body>
+
 </html>

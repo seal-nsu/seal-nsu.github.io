@@ -7,7 +7,7 @@
   <title>SEAL — Systems on Embodied AI Lab | North South University</title>
   <meta name="description"
     content="SEAL (Systems on Embodied AI Lab) at North South University researches embodied AI, robot learning, perception and control systems.">
-  <link rel="icon" href="logo1.png" type="image/png">
+  <link rel="icon" href="logo.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="style.css">
@@ -15,45 +15,46 @@
 
 <body data-page="home">
 
-  <template id="kinematic-template">
-    <svg class="kinematic-divider" viewBox="0 0 1120 40" preserveAspectRatio="none" aria-hidden="true">
-      <path
-        d="M0,20 L220,20 L260,8 L300,32 L340,20 L560,20 L600,8 L640,32 L680,20 L900,20 L940,8 L980,32 L1020,20 L1120,20" />
-      <circle cx="260" cy="8" r="3.5" />
-      <circle cx="300" cy="32" r="3.5" />
-      <circle cx="600" cy="8" r="3.5" />
-      <circle cx="640" cy="32" r="3.5" />
-      <circle cx="940" cy="8" r="3.5" />
-      <circle cx="980" cy="32" r="3.5" />
-    </svg>
-  </template>
-
   <div id="header-slot"></div>
 
   <main>
 
     <!-- Hero -->
-    <section class="hero">
+    <section class="hero band-dark">
       <div class="wrap">
         <div>
+          <h2>Systems on Embodied AI Lab</h2>
           <span class="tag-label mono" id="hero-university">North South University, Dhaka</span>
-          <h1>Systems built for a body.<br>Intelligence built to <span>act</span>.</h1>
+          <h1>Systems built for a <em>body</em>.<br>Intelligence built to <em>act</em>.</h1>
           <p class="hero-lede" id="hero-lede">Loading mission statement…</p>
           <div class="hero-actions">
-            <a href="projects.html" class="btn btn-primary">View Projects</a>
-            <a href="members.html" class="btn btn-outline">Meet the Team</a>
+            <a href="publications.html" class="btn btn-primary">Explore Research</a>
+            <a href="contact.html" class="btn btn-ghost">Join the Lab</a>
+          </div>
+          
+        </div>
+
+        <div class="rig-wrap" style="position:relative;">
+          <!-- <div class="rig-chip chip-1"><span class="dot"></span>STATUS · ACTIVE</div> -->
+          <!-- <div class="rig-chip chip-2"><span class="dot"></span>RIG · SEAL-Q1</div> -->
+
+          <div class="rig-wrap" style="position:relative;">
+            <div class="hero-logo">
+              <img src="seal-logo.png" alt="SEAL Lab Logo">
+            </div>
           </div>
         </div>
 
-        <!-- Robotic Manipulator Diagram -->
-        <div class="hero-logo-container">
-          <img src="logo000.png" alt="SEAL - Systems on Embodied AI Lab" class="hero-logo">
-        </div>
+        <!-- <div class="stat-strip" id="stat-strip" style="grid-column: 1 / -1;"></div> -->
+         <div >
+    <span class="tag-label mono" id="hero-university">Embodied AI</span>
+    <span class="tag-label mono" id="hero-university">Robot Learning</span>
+    <span class="tag-label mono" id="hero-university">Artificial Intelligence</span>
+    <span class="tag-label mono" id="hero-university">Edge Device</span>
+    <span class="tag-label mono" id="hero-university">Human-Robot Interaction</span>
+</div>
+      </div>
     </section>
-
-    <div class="wrap">
-      <div class="kd-slot"></div>
-    </div>
 
     <!-- About -->
     <section class="section" id="about">
@@ -62,24 +63,22 @@
           <span class="eyebrow">About the Lab</span>
           <h2>Our mission</h2>
         </div>
-        <div class="about-grid">
-          <div class="about-body">
-            <p id="about-mission">Loading…</p>
-            <p>SEAL is part of the Department of Electrical and Computer Engineering at North South University, Dhaka,
-              and welcomes collaboration with researchers, students, and industry partners working on embodied
-              intelligence.</p>
-          </div>
-          <div class="spec-card">
-            <div class="spec-card-head mono">Lab Specification</div>
-            <div class="spec-row"><span class="k">Institution</span><span class="v">NSU, Dhaka</span></div>
-            <div class="spec-row"><span class="k">Department</span><span class="v">ECE</span></div>
-            <div class="spec-row"><span class="k">Faculty</span><span class="v">3 members</span></div>
-            <div class="spec-row"><span class="k">Research assistants</span><span class="v">4 members</span></div>
-            <div class="spec-row"><span class="k">Focus areas</span><span class="v">4 active</span></div>
-          </div>
-        </div>
+        <p class="mission-quote" id="about-mission">Loading…</p>
+        <p class="about-foot">SEAL is part of the Department of Electrical and Computer Engineering at North South
+          University, Dhaka, and welcomes collaboration with researchers, students, and industry partners working on
+          embodied intelligence.</p>
+      </div>
+    </section>
 
-        <div class="focus-grid" id="focus-grid"></div>
+    <!-- Focus Areas -->
+    <section class="section" id="focus">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Research Focus</span>
+          <h2>Four problems we keep returning to</h2>
+          <p>Not a product roadmap — the questions that shape what we choose to work on.</p>
+        </div>
+        <div class="focus-list" id="focus-list"></div>
       </div>
     </section>
 
@@ -91,8 +90,13 @@
           <h2>Led by researchers who build, not just publish</h2>
           <p>A small, focused team spanning faculty and research assistants.</p>
         </div>
-        <div id="director-teaser"></div>
-        <p class="mono" id="team-count" style="margin-top:20px; color:var(--text-faint); font-size:13px;"></p>
+        <div class="member-grid" id="faculty-preview"></div>
+
+<p class="mono" id="team-count"
+   style="margin-top:20px;color:var(--text-faint);font-size:13px;">
+</p>
+        <!-- <p class="mono" id="team-count" style="margin-top:40px; color:var(--text-faint); font-size:13px;"></p>
+        <p class="mono" id="team-count" style="margin-top:60px; color:var(--text-faint); font-size:13px;"></p> -->
         <div class="section-foot">
           <a href="members.html" class="btn btn-outline">See full team →</a>
         </div>
@@ -114,7 +118,7 @@
       </div>
     </section>
 
-    <!-- Publications Preview (New Section) -->
+    <!-- Publications Preview -->
     <section class="section" id="publications-preview">
       <div class="wrap">
         <div class="section-head">
@@ -141,7 +145,7 @@
           <a href="news.html" class="btn btn-outline">All News →</a>
         </div>
 
-        <div style="margin-top:72px;" class="cta-band">
+        <div style="margin-top:72px;" class="cta-band band-dark">
           <div>
             <h3>Interested in embodied AI research?</h3>
             <p>We welcome inquiries from prospective students and collaborators.</p>

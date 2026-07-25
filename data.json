@@ -3,9 +3,11 @@
     "name": "SEAL",
     "fullName": "Systems on Embodied AI Lab",
     "university": "North South University, Dhaka",
+    "department": "Dept. of Electrical & Computer Engineering",
+    "founded": "2024",
     "tagline": "Building intelligent systems that sense, move, and act in the physical world.",
-    "mission": "SEAL researches the systems that let artificial intelligence step off the screen and into the physical world \u2014 from perception and control to learning in embodied agents. We work at the intersection of robotics, machine learning, and systems design.",
-    "email": "seal.lab@northsouth.edu",
+    "mission": "SEAL researches the systems that let artificial intelligence step off the screen and into the physical world — from perception and control to learning in embodied agents. We work at the intersection of robotics, machine learning, and systems design.",
+    "email": "nsuseal@gmail.com",
     "address": "North South University, Bashundhara, Dhaka, Bangladesh",
     "mapCoordinates": {
       "lat": 23.81508081618213,
@@ -13,82 +15,268 @@
     }
   },
   "focusAreas": [
-    "Embodied AI & Robot Learning",
-    "Perception & Control Systems",
-    "Reinforcement Learning",
-    "Human-Robot Interaction"
+    {
+      "title": "Embodied AI & Robot Learning",
+      "blurb": "Agents that learn by acting — training policies through physical interaction rather than static datasets alone."
+    },
+    {
+      "title": "Perception & Control Systems",
+      "blurb": "Turning noisy sensor streams into reliable state estimates, and state estimates into stable, safe control."
+    },
+    {
+      "title": "Artificial Intelligence",
+      "blurb": "Encompassing core machine learning paradigms, automated reasoning, and sequential decision-making to build adaptive systems capable of scaling from simulation to real-world deployment."
+    },
+    {
+      "title": "Human-Robot Interaction",
+      "blurb": "Designing robot behavior that people can predict, trust, and work alongside safely."
+    }
   ],
   "members": {
     "faculty": [
-      {
-        "name": "Dr. Mohammad Ashrafuzzaman Khan",
-        "role": "Associate Professor, Lab Director"
-      },
-      {
-        "name": "Dr. Mohammad Abdul Qayum",
-        "role": "Faculty Member"
-      },
-      {
-        "name": "Dr. Mohsin Sajjad",
-        "role": "Faculty Member"
-      }
-    ],
+  {
+    "name": "Dr. Mohammad Ashrafuzzaman Khan",
+    "role": "Associate Professor, Lab Director",
+    "photo": "azk.jpeg",
+    "profileUrl": "https://ece.northsouth.edu/people/dr-mohammad-ashrafuzzaman-khan/"
+  },
+  {
+    "name": "Dr. Mohammad Abdul Qayum",
+    "role": "Faculty Member",
+    "photo": "maqm.jpeg",
+    "profileUrl": "https://ece.northsouth.edu/people/dr-mohammad-abdul-qayum/"
+  },
+  {
+    "name": "Dr. Mohsin Sajjad",
+    "role": "Faculty Member",
+    "photo": "moj.jpeg",
+    "profileUrl": "https://ece.northsouth.edu/people/dr-mohsin-sajjad/"
+  }
+],
     "researchAssistants": [
-      { "name": "Ahmed Faizul Haque Dhrubo", "role": "Research Assistant" },
-      { "name": "Souvik Pramanik", "role": "Research Assistant" },
-      { "name": "Asadullah Hil Galib", "role": "Research Assistant" },
-      { "name": "Saif Ahmed", "role": "Research Assistant" }
-    ]
+  {
+    "name": "Ahmed Faizul Haque Dhrubo",
+    "role": "Research Assistant",
+    "photo": "dhrubo.jpeg",
+    "profileUrl": "https://flagship-research-po-281a.bolt.host/"
+  },
+  {
+    "name": "Souvik Pramanik",
+    "role": "Research Assistant",
+    "photo": "souvik.jpeg",
+    "profileUrl": "https://souvikpramanik.vercel.app/"
+  }
+  ,
+  {
+    "name": "Saif Ahmed",
+    "role": "Research Assistant",
+    "photo": "saif.jpeg",
+    "profileUrl": "https://saifahmedarfi.github.io/"
+  }
+  ,
+  {
+    "name": "Asadulla Hil Galib",
+    "role": "Research Assistant",
+    "photo": "galib.jpeg",
+    "profileUrl": "https://theboredman.dev/"
+  }
+  ,
+  {
+    "name": "Most Aysha Siddika Sumona",
+    "role": "Research Assistant",
+    "photo": "aysha.jpeg",
+    "profileUrl": "https://github.com/AyshaSiddika1"
+  }
+]
   },
   "projects": [
     {
-      "title": "Project Title Placeholder One",
+      "title": "LexiKan-AI",
+      "status": "Completed",
+      "description": "LexiKAN AI is an advanced legal intelligence platform utilizing BiGRU and Kolmogorov–Arnold Neural Networks (KAN) for precise 11-way judgment disposition classification and automated structural case note summary generation.",
+      "demoUrl": "https://lexi-kan-ai.vercel.app/",
+      "githubUrl": "https://github.com/saifahmedarfi/LexiKan-AI"
+    },
+    {
+      "title": "CGIAR-RicePredict: Multi-Target Agronomic Intelligence for Crop Yield and Quality",
       "status": "Ongoing",
-      "description": "A short placeholder description of this research project goes here. Explain the problem, the approach, and what makes it interesting \u2014 this text expands when the title is clicked.",
-      "demoUrl": "",
+      "description": "CGIAR-RicePredict is a multi-target AI system designed to simultaneously estimate grain yield, zinc, and iron content in rice crops. By evaluating soil, climate, genotype, and management parameters, it empowers precision agriculture with concurrent forecasts of yield and micronutrient quality.",
+      "demoUrl": "https://agri-kan-net-deep-kan-framework-for.vercel.app/",
+      "githubUrl": "https://github.com/saifahmedarfi/CGIAR-RicePredict-Multi-Target-Agronomic-Intelligence-for-Crop-Yield-and-Quality"
+    },
+    {
+      "title": "A Smart Humanoid Robot",
+      "status": "Ongoing",
+      "description": "An autonomous system combining advanced computer vision, natural language processing, and precise physical actuation to perceive its environment, reason through complex tasks, and interact seamlessly alongside humans.",
+      "demoUrl": "gallery.html",
       "githubUrl": ""
     },
     {
-      "title": "Project Title Placeholder Two",
+      "title": "Real and Fake Art Prediction Using Deep Learning",
       "status": "Completed",
       "description": "Another placeholder description. Replace this with a summary of the project's goals, methods, and outcomes.",
-      "demoUrl": "",
-      "githubUrl": ""
-    },
-    {
-      "title": "Project Title Placeholder Three",
-      "status": "Ongoing",
-      "description": "Placeholder text describing a third project. Swap this out with real content whenever it's ready.",
       "demoUrl": "",
       "githubUrl": ""
     }
   ],
   "publications": [
     {
-      "title": "Publication Title Placeholder One",
-      "authors": "A. Author, B. Author, C. Author",
-      "venue": "Conference / Journal Name",
+      "title": "Enhancing BiGRU with a KAN Block for Legal Document Classification and Summarization",
+      "authors": "AFH Dhrubo, S Pramanik, M Sumona, S Siddique, MA Khan, MA Qayum, et al.",
+      "venue": "arXiv preprint arXiv:2606.00116",
       "year": "2026",
       "pdfUrl": "",
       "doiUrl": ""
     },
     {
-      "title": "Publication Title Placeholder Two",
-      "authors": "A. Author, B. Author",
-      "venue": "Conference / Journal Name",
-      "year": "2025",
+      "title": "Bone Fracture Detection Using Vision Transformers: A Comparative Analysis of the Pooling-Based Vision Transformer (PiT) and the Causal Transformer (CaFormer) Models",
+      "authors": "AI Munna, MI Khalil, A Munna, A Halder, S Pramanik, MAS Sumona, et al.",
+      "venue": "2026 IEEE 2nd International Conference on Secure IoT, Assured and Trusted",
+      "year": "2026",
+      "pdfUrl": "",
+      "doiUrl": ""
+    },
+    {
+      "title": "Blockchain Meets AI-Powered Oracles and decentralized storage: A Secure and Scalable Framework for Decentralized Credit Scoring",
+      "authors": "SKS Anam, MMH Bhuiyan, S Pramanik, AFH Dhrubo, KB Jahangir, et al.",
+      "venue": "2026 International Conference on Integrated Intelligence and Cognitive",
+      "year": "2026",
+      "pdfUrl": "",
+      "doiUrl": ""
+    },
+    {
+      "title": "PlantaNet and PlantaNetLite: Efficient and explainable multi-crop plant disease classification via transformer benchmarking and custom lightweight CNNs",
+      "authors": "MSH Zidan, A Imran, MK Mia, M Hussain, AFH Dhrubo, MA Qayum",
+      "venue": "PLoS One 21 (4), e0346977",
+      "year": "2026",
+      "pdfUrl": "",
+      "doiUrl": ""
+    },
+    {
+      "title": "Detection and Classification of Peripheral Blood Cells in Microscopic Images using Deep Learning",
+      "authors": "M Hossain, NMM Haque, MSI Sajib, AFH Dhrubo, MA Qayum",
+      "venue": "2026 International Conference on Integrated Intelligence and Cognitive",
+      "year": "2026",
+      "pdfUrl": "",
+      "doiUrl": ""
+    },
+    {
+      "title": "Comparative Evaluation of Deep Learning Architectures for Underwater Semantic Segmentation Using the SUIM Dataset",
+      "authors": "A Rahman, RAB Azam, IJ Chowdhury, NMN Uddin, S Pramanik, et al.",
+      "venue": "2026 International Conference on Integrated Intelligence and Cognitive",
+      "year": "2026",
+      "pdfUrl": "",
+      "doiUrl": ""
+    },
+    {
+      "title": "Real and Fake Art Prediction Using Deep Learning",
+      "authors": "KA Al Hasnaine, MA Sunny, A Amin, MJ Abedin, AFH Dhrubo, MA Qayum",
+      "venue": "2026 International Conference on Integrated Intelligence and Cognitive",
+      "year": "2026",
+      "pdfUrl": "",
+      "doiUrl": ""
+    },
+    {
+      "title": "AGENT-CORE: A Self-Correcting Multi-Domain Framework for Agentic Reasoning in 7B-8B Quantized Models",
+      "authors": "J Bhowmik, T Ishraque, AFH Dhrubo, MA Qayum",
+      "venue": "2026 International Conference on Integrated Intelligence and Cognitive",
+      "year": "2026",
+      "pdfUrl": "",
+      "doiUrl": ""
+    },
+    {
+      "title": "Real-Time Legal Auditing of LLM Interactions Using Retrieval Augmented Small Language Models",
+      "authors": "W Hossain, A Wahid, S Haque, AFH Dhrubo, MA Qayum",
+      "venue": "2026 International Conference on Integrated Intelligence and Cognitive",
+      "year": "2026",
+      "pdfUrl": "",
+      "doiUrl": ""
+    },
+    {
+      "title": "Measuring the Impact of Social Media on Human Productivity Using Sentiment, Emotion, and Explainability",
+      "authors": "EA Khan, MS Islam, S Alam, AFH Dhrubo, MA Qayum",
+      "venue": "2026 International Conference on Integrated Intelligence and Cognitive",
+      "year": "2026",
+      "pdfUrl": "",
+      "doiUrl": ""
+    },
+    {
+      "title": "Explainable Stacking for Bangladesh CPI: Ridge-Meta Ensembles with SHAP/LIME",
+      "authors": "MA Lishad, MA Arafat, AFH Dhrubo, MA Qayum",
+      "venue": "2026 International Conference on Integrated Intelligence and Cognitive",
+      "year": "2026",
+      "pdfUrl": "",
+      "doiUrl": ""
+    },
+    {
+      "title": "Comparative Analysis of Transformer Models for Multi-Class Emotion Detection: A Cross-Dataset Study",
+      "authors": "M Chowdhury, AS Nafi, F Shameem, SA Sakil, AFH Dhrubo, S Pramanik, et al.",
+      "venue": "2026 International Conference on Integrated Intelligence and Cognitive",
+      "year": "2026",
+      "pdfUrl": "",
+      "doiUrl": ""
+    },
+    {
+      "title": "Blockchain meets Artificial Intelligence and Decentralized Storage: An Innovative Architecture for Decentralized Applications",
+      "authors": "T Ahmed, R Ghosh, AFH Dhrubo, KB Jahangir, MA Qayum",
+      "venue": "2026 International Conference on Artificial Intelligence in Information and",
+      "year": "2026",
+      "pdfUrl": "",
+      "doiUrl": ""
+    },
+    {
+      "title": "Advancing Sentiment Analysis with BERT: A Comparative Evaluation Against Machine Learning and Deep Learning Techniques",
+      "authors": "SM Chowdhury, TR Ratul, A Rahman, KMF Tanvir, AR Chowdhury, et al.",
+      "venue": "2026 IEEE 2nd International Conference on Secure IoT, Assured and Trusted",
+      "year": "2026",
+      "pdfUrl": "",
+      "doiUrl": ""
+    },
+    {
+      "title": "Engineering Spatiotemporal Forecasts at Scale: Dhaka Weather with State-Of-the Art Machine Learning Models",
+      "authors": "TA Rijan, NN Katha, MT Raihan, MN Alam, AFH Dhrubo, MA Qayum",
+      "venue": "2026 IEEE 2nd International Conference on Secure IoT, Assured and Trusted",
+      "year": "2026",
+      "pdfUrl": "",
+      "doiUrl": ""
+    },
+    {
+      "title": "Compact Vision Transformers for BFMRX Bone-Fracture Detection",
+      "authors": "J Hossain, KR Ullah, AS Nafi, MM Islam, AFH Dhrubo, S Pramanik, et al.",
+      "venue": "2026 IEEE 2nd International Conference on Secure IoT, Assured and Trusted",
+      "year": "2026",
       "pdfUrl": "",
       "doiUrl": ""
     }
   ],
   "news": [
     {
-      "date": "2026-07-01",
-      "text": "Placeholder news item \u2014 replace with a real lab update, publication, or event."
+      "date": "2026-07-26",
+      "text": "Our team is excited to participate and present our latest research at BEAR SUMMIT 2026."
     },
     {
-      "date": "2026-05-14",
-      "text": "Another placeholder announcement goes here."
+      "date": "2026-06-05",
+      "text": "New preprint on enhancing BiGRU with KAN blocks for legal document classification and summarization released on arXiv."
+    },
+    {
+      "date": "2026-05-18",
+      "text": "Research paper accepted on fine-tuning Whisper and PyAnnote for Bangla long-form speech recognition and speaker diarization."
+    },
+    {
+      "date": "2026-04-20",
+      "text": "PlantaNet and PlantaNetLite accepted in PLoS One, featuring efficient crop disease classification via custom lightweight CNNs."
+    },
+    {
+      "date": "2026-03-12",
+      "text": "Work accepted for the 2026 International Conference on Integrated Intelligence and Cognitive Engineering focusing on underwater semantic segmentation."
+    },
+    {
+      "date": "2026-02-15",
+      "text": "New initiative launched exploring agentic reasoning frameworks and self-correcting multi-domain models in quantized 7B-8B LLMs."
+    },
+    {
+      "date": "2026-01-10",
+      "text": "Kicked off collaborative research on spatiotemporal forecasting and weather modeling across smart infrastructure."
     }
   ]
 }

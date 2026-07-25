@@ -45,21 +45,21 @@ async function loadData() {
 function renderShared(lab) {
   const email = $('#footer-email');
   if (email) { email.textContent = lab.email; email.href = `mailto:${lab.email}`; }
-  
+
   const uni = $('#footer-university');
   if (uni) uni.textContent = lab.university;
-  
+
   const labName = $('#footer-lab-name');
   if (labName) labName.textContent = lab.name;
-  
+
   const desc = $('#footer-desc');
   if (desc) desc.textContent = `${lab.fullName} — ${lab.tagline}`;
-  
+
   const copyright = $('#footer-copyright');
   if (copyright) copyright.textContent = `© ${new Date().getFullYear()} ${lab.name}`;
 }
 
-/* ---------- Publications Teaser (New) ---------- */
+/* ---------- Publications Teaser ---------- */
 function pubTeaserHTML(pub) {
   return `
     <div class="pub-item">
@@ -76,24 +76,40 @@ function pubTeaserHTML(pub) {
 function renderHome(data) {
   const { lab, focusAreas, members, projects, publications, news } = data;
 
-  // Hero
   const heroLede = $('#hero-lede');
   if (heroLede) heroLede.textContent = lab.tagline;
 
   const heroTag = $('#hero-university');
   if (heroTag) heroTag.textContent = lab.university;
 
-  // Mission
   const mission = $('#about-mission');
   if (mission) mission.textContent = lab.mission;
 
-  // Focus Areas
-  const focusGrid = $('#focus-grid');
-  if (focusGrid) {
-    focusGrid.innerHTML = focusAreas.map((a, i) => `
-      <div class="focus-card">
-        <span class="focus-index mono">FA-${String(i + 1).padStart(2, '0')}</span>
-        <h4>${escapeHTML(a)}</h4>
+  // Stat strip (hero)
+  const totalPeople = members.faculty.length + members.researchAssistants.length;
+  const stats = [
+    { num: String(members.faculty.length).padStart(2, '0'), label: 'Faculty' },
+    { num: String(members.researchAssistants.length).padStart(2, '0'), label: 'Research Assistants' },
+    { num: String(focusAreas.length).padStart(2, '0'), label: 'Focus Areas' },
+    { num: lab.founded || '—', label: 'Established' }
+  ];
+  const statStrip = $('#stat-strip');
+  if (statStrip) {
+    statStrip.innerHTML = stats.map(s => `
+      <div class="stat">
+        <div class="stat-num mono">${escapeHTML(s.num)}</div>
+        <div class="stat-label">${escapeHTML(s.label)}</div>
+      </div>`).join('');
+  }
+
+  // Focus Areas — index list
+  const focusList = $('#focus-list');
+  if (focusList) {
+    focusList.innerHTML = focusAreas.map((f, i) => `
+      <div class="focus-row">
+        <span class="focus-index">${String(i + 1).padStart(2, '0')}</span>
+        <h4>${escapeHTML(f.title)}</h4>
+        <p>${escapeHTML(f.blurb || '')}</p>
       </div>`).join('');
   }
 
@@ -111,11 +127,9 @@ function renderHome(data) {
       </div>`;
   }
 
-  // Team Count
   const teamCount = $('#team-count');
   if (teamCount) {
-    const total = members.faculty.length + members.researchAssistants.length;
-    teamCount.textContent = `+ ${total - 1} more researchers across faculty and research assistants`;
+    teamCount.textContent = `+ ${totalPeople - 1} more researchers across faculty and research assistants`;
   }
 
   // Projects Teaser
@@ -129,13 +143,10 @@ function renderHome(data) {
       </div>`).join('');
   }
 
-  // Publications Teaser (New)
+  // Publications Teaser
   const pubTeaser = $('#pub-teaser-list');
   if (pubTeaser && publications) {
-    const recentPubs = [...publications]
-      .sort((a, b) => Number(b.year) - Number(a.year))
-      .slice(0, 3);
-    
+    const recentPubs = [...publications].sort((a, b) => Number(b.year) - Number(a.year)).slice(0, 3);
     pubTeaser.innerHTML = recentPubs.map(pubTeaserHTML).join('');
   }
 
@@ -147,7 +158,7 @@ function renderHome(data) {
   }
 }
 
-/* ---------- Other page renderers (unchanged) ---------- */
+/* ---------- Other page renderers ---------- */
 function memberCardHTML(member) {
   return `
     <div class="member-card">
@@ -185,7 +196,6 @@ function renderProjects(projects) {
   const grid = $('#project-grid');
   if (!grid) return;
   grid.innerHTML = projects.map((project, idx) => projectCardHTML(project, idx)).join('');
-  // Toggle functionality...
   $$('.project-card h3').forEach(title => {
     const toggle = () => {
       const card = title.closest('.project-card');
@@ -244,7 +254,7 @@ function renderNews(news) {
 function renderContact(lab) {
   const email = $('#contact-email');
   if (email) { email.textContent = lab.email; email.href = `mailto:${lab.email}`; }
-  
+
   const addr = $('#contact-address-detail');
   if (addr) addr.textContent = lab.address;
 
@@ -271,20 +281,22 @@ function renderContact(lab) {
 
 /* ---------- Nav & UI ---------- */
 function initNavToggle() {
-  const toggle = $('#nav-toggle');
-  const links = $('#nav-links');
-  if (!toggle || !links) return;
-  toggle.addEventListener('click', () => {
-    const isOpen = links.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', String(isOpen));
-  });
-  $$('#nav-links a').forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
-}
+  const toggle = document.getElementById("nav-toggle");
+  const nav = document.getElementById("nav-links");
 
-function initDividers() {
-  const tpl = document.getElementById('kinematic-template');
-  if (!tpl) return;
-  $$('.kd-slot').forEach(slot => slot.appendChild(tpl.content.cloneNode(true)));
+  if (!toggle || !nav) return;
+
+  toggle.addEventListener("click", () => {
+    nav.classList.toggle("active");
+    toggle.classList.toggle("active");
+  });
+
+  nav.querySelectorAll("a").forEach(a => {
+    a.addEventListener("click", () => {
+      nav.classList.remove("active");
+      toggle.classList.remove("active");
+    });
+  });
 }
 
 async function init() {
@@ -295,13 +307,13 @@ async function init() {
 
   setActiveNav();
   initNavToggle();
-  initDividers();
 
   try {
     const data = await loadData();
     renderShared(data.lab);
     renderHome(data);
     renderMembers(data.members);
+    renderFacultyPreview(data.members);
     renderProjects(data.projects);
     renderPublications(data.publications);
     renderNews(data.news);
@@ -311,7 +323,7 @@ async function init() {
     const main = $('main');
     if (main) {
       const notice = document.createElement('div');
-      notice.style.cssText = 'padding:40px;text-align:center;font-family:monospace;color:#FF8A3D;';
+      notice.style.cssText = 'padding:40px;text-align:center;font-family:monospace;color:#B23B3B;';
       notice.textContent = 'Could not load data.json. Please run a local server.';
       main.prepend(notice);
     }
@@ -319,3 +331,95 @@ async function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+function initGallery() {
+
+  const items = document.querySelectorAll(".gallery-item img");
+
+  const lightbox = document.getElementById("gallery-lightbox");
+
+  const preview = document.getElementById("gallery-preview");
+
+  if (!lightbox) return;
+
+  items.forEach(img => {
+
+    img.addEventListener("click", () => {
+
+      preview.src = img.src;
+
+      lightbox.classList.add("active");
+
+    });
+
+  });
+
+  lightbox.addEventListener("click", () => {
+
+    lightbox.classList.remove("active");
+
+  });
+
+}
+
+initGallery();
+
+function renderFacultyPreview(members) {
+
+  const container = document.getElementById("faculty-preview");
+  if (!container) return;
+
+  const faculty = members.faculty.slice(0, 3);
+
+  container.innerHTML = faculty.map(m => `
+        <div class="member-card">
+
+            <div class="avatar">
+                ${m.photo
+      ? `<img src="${m.photo}" alt="${escapeHTML(m.name)}">`
+      : escapeHTML(initials(m.name))
+    }
+            </div>
+
+            <div class="member-info">
+                <div class="name">${escapeHTML(m.name)}</div>
+                <div class="role">${escapeHTML(m.role)}</div>
+            </div>
+
+        </div>
+    `).join("");
+
+}
+renderFacultyPreview(data.members);
+
+function memberCardHTML(member) {
+
+  const avatar = member.photo
+    ? `<img src="${escapeHTML(member.photo)}" alt="${escapeHTML(member.name)}">`
+    : escapeHTML(initials(member.name));
+
+  const content = `
+      <div class="member-card">
+          <div class="avatar">
+              ${avatar}
+          </div>
+
+          <div class="member-info">
+              <div class="name">${escapeHTML(member.name)}</div>
+              <div class="role">${escapeHTML(member.role)}</div>
+          </div>
+      </div>
+  `;
+
+  if (member.profileUrl) {
+      return `
+      <a href="${escapeHTML(member.profileUrl)}"
+         class="member-link"
+         target="_blank"
+         rel="noopener">
+          ${content}
+      </a>`;
+  }
+
+  return content;
+}
