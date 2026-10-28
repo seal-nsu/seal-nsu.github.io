@@ -50,11 +50,13 @@ main{max-width:920px;margin:0 auto;padding:10px 20px 80px}
 
 <form id="login">
   <h1>SEAL Admin</h1>
-  <div class="dim">Sign in to edit the website.</div>
+  <div class="dim" id="lhelp"></div>
   <label>Username<input id="u" autocomplete="username" required></label>
   <label>Password<input id="p" type="password" autocomplete="current-password" required></label>
+  <label id="tokrow">GitHub token<input id="tok" type="password" autocomplete="off" placeholder="github_pat_..."></label>
   <button class="btn" id="lbtn">Sign in</button>
   <div class="err" id="lerr"></div>
+  <a href="#" id="forget" class="dim hidden" style="font-size:13px">Forget this device</a>
 </form>
 
 <div id="admin" class="hidden">
@@ -74,7 +76,8 @@ main{max-width:920px;margin:0 auto;padding:10px 20px 80px}
 <datalist id="roles-studentMembers"><option>Student Member</option></datalist>
 
 <script>
-const API = 'https://seal-admin-api.nsuseal.workers.dev';
+const OWNER = 'seal-nsu', REPO = 'seal-nsu.github.io', BRANCH = 'main';   // change here if your repo differs
+const GH = `https://api.github.com/repos/${OWNER}/${REPO}`;
 const GROUPS = { faculty:'Faculty', seniorResearchAssistants:'Senior Research Assistants', researchAssistants:'Research Assistants', studentMembers:'Student Members' };
 const ROLES = { faculty:'Assistant Professor, Co-Director', seniorResearchAssistants:'Senior Research Assistant', researchAssistants:'Research Assistant', studentMembers:'Student Member' };
 const F = {
@@ -93,37 +96,101 @@ const NEW = {
 };
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let token = sessionStorage.getItem('seal_t') || '', data = null, sha = '', dirty = false, tab = 'members';
+let token = '', data = null, sha = '', dirty = false, tab = 'members';
 const previews = {};
 
-/* ---------- API ---------- */
-async function api(path, method = 'GET', body) {
-  const r = await fetch(API + path, {
+/* ---------- GitHub API (direct) ---------- */
+const enc = new TextEncoder(), dec = new TextDecoder();
+async function gh(path, method = 'GET', body) {
+  const r = await fetch(GH + path, {
     method,
-    headers: { 'Content-Type':'application/json', ...(token ? { Authorization:'Bearer ' + token } : {}) },
+    headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' },
     body: body ? JSON.stringify(body) : undefined
   });
-  const j = await r.json().catch(() => ({}));
-  if (r.status === 401 && path !== '/login') { logout(); throw new Error('Session expired. Please sign in again.'); }
-  if (!r.ok) throw new Error(j.error || 'Error ' + r.status);
-  return j;
+  if (r.status === 401) { logout(); throw new Error('GitHub rejected the token (expired or wrong).'); }
+  return r;
+}
+const toB64 = s => { const b = enc.encode(s); let x = ''; for (let i = 0; i < b.length; i += 0x8000) x += String.fromCharCode(...b.subarray(i, i + 0x8000)); return btoa(x); };
+const fromB64 = s => dec.decode(Uint8Array.from(atob(s.replace(/\s/g, '')), c => c.charCodeAt(0)));
+
+async function api(path, method = 'GET', body) {
+  if (path === '/data' && method === 'GET') {
+    const r = await gh(`/contents/data.json?ref=${BRANCH}`);
+    if (!r.ok) throw new Error(`Could not load data.json (GitHub ${r.status}). Check the token's repo access and the owner/repo/branch at the top of admin.html.`);
+    const f = await r.json();
+    return { content: fromB64(f.content), sha: f.sha };
+  }
+  if (path === '/data' && method === 'PUT') {
+    const pretty = JSON.stringify(JSON.parse(body.content), null, 2) + '\n';
+    const r = await gh('/contents/data.json', 'PUT', { message: body.message, content: toB64(pretty), sha: body.sha, branch: BRANCH });
+    if (r.status === 409 || r.status === 422) throw new Error('Someone else changed the data. Reload the page and try again.');
+    if (r.status === 403 || r.status === 404) throw new Error('The token cannot write to the repo. It needs Contents: Read and write.');
+    if (!r.ok) throw new Error('GitHub error ' + r.status);
+    return { sha: (await r.json()).content.sha };
+  }
+  if (path === '/upload') {
+    const ex = await gh(`/contents/${body.path}?ref=${BRANCH}`);
+    const b = { message: `Upload ${body.path} via admin`, content: body.content, branch: BRANCH };
+    if (ex.ok) b.sha = (await ex.json()).sha;
+    const r = await gh('/contents/' + body.path, 'PUT', b);
+    if (!r.ok) throw new Error('Upload failed (GitHub ' + r.status + ')');
+    return { path: body.path };
+  }
 }
 
-/* ---------- auth ---------- */
+/* ---------- local login: token is encrypted in this browser only ---------- */
+const b64 = u => btoa(String.fromCharCode(...u)), unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function keyFrom(pw, salt) {
+  const k = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({ name:'PBKDF2', salt, iterations:250000, hash:'SHA-256' }, k, { name:'AES-GCM', length:256 }, false, ['encrypt', 'decrypt']);
+}
+async function seal(user, pw, tok) {
+  const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = new Uint8Array(await crypto.subtle.encrypt({ name:'AES-GCM', iv }, await keyFrom(user + ':' + pw, salt), enc.encode(tok)));
+  localStorage.setItem('seal_vault', JSON.stringify({ s:b64(salt), i:b64(iv), c:b64(ct) }));
+}
+async function unseal(user, pw) {
+  const v = JSON.parse(localStorage.getItem('seal_vault'));
+  return dec.decode(await crypto.subtle.decrypt({ name:'AES-GCM', iv:unb64(v.i) }, await keyFrom(user + ':' + pw, unb64(v.s)), unb64(v.c)));
+}
+
+function loginMode() {
+  const has = !!localStorage.getItem('seal_vault');
+  $('#tokrow').classList.toggle('hidden', has); $('#forget').classList.toggle('hidden', !has);
+  $('#lbtn').textContent = has ? 'Sign in' : 'Set up this device';
+  $('#lhelp').textContent = has ? 'Sign in to edit the website.' : 'First time on this device: paste your GitHub token and choose a username and password (8+ characters).';
+}
+
 $('#login').addEventListener('submit', async ev => {
   ev.preventDefault();
   $('#lerr').textContent = ''; $('#lbtn').disabled = true;
+  const user = $('#u').value.trim(), pw = $('#p').value;
   try {
-    const j = await api('/login', 'POST', { username:$('#u').value.trim(), password:$('#p').value });
-    token = j.token; sessionStorage.setItem('seal_t', token); $('#p').value = '';
+    if (!localStorage.getItem('seal_vault')) {
+      const t = $('#tok').value.trim();
+      if (!t) throw new Error('Paste your GitHub token.');
+      if (pw.length < 8) throw new Error('Choose a password of 8+ characters.');
+      token = t;
+      const r = await gh('');
+      if (!r.ok) throw new Error(`GitHub could not open the repo (${r.status}). Check the token's repository access.`);
+      await seal(user, pw, t); $('#tok').value = '';
+    } else {
+      try { token = await unseal(user, pw); } catch { throw new Error('Wrong username or password.'); }
+    }
+    $('#p').value = '';
     await start();
-  } catch (err) { $('#lerr').textContent = err.message; }
+  } catch (err) { token = ''; $('#lerr').textContent = err.message; }
   $('#lbtn').disabled = false;
 });
 
+$('#forget').onclick = ev => {
+  ev.preventDefault();
+  if (confirm('Remove the saved login from this browser? You will need to paste the GitHub token again.')) { localStorage.removeItem('seal_vault'); loginMode(); }
+};
+
 function logout() {
-  token = ''; sessionStorage.removeItem('seal_t'); data = null;
-  $('#admin').classList.add('hidden'); $('#login').classList.remove('hidden');
+  token = ''; data = null;
+  $('#admin').classList.add('hidden'); $('#login').classList.remove('hidden'); loginMode();
 }
 $('#out').onclick = () => { if (!dirty || confirm('Discard unsaved changes and log out?')) { dirty = false; logout(); } };
 
@@ -259,7 +326,7 @@ $('#save').onclick = async () => {
 
 window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
 
-if (token) start().catch(() => logout());
+loginMode();
 </script>
 </body>
 </html>
