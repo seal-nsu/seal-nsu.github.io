@@ -3,6 +3,18 @@
    Shared across every page.
    ============================================================ */
 
+/* ---------- Visitor analytics (GoatCounter) ----------
+   Put your GoatCounter site code here (the part before .goatcounter.com). Leave '' to disable. */
+const GOATCOUNTER_CODE = '';
+(function () {
+  if (!GOATCOUNTER_CODE) return;
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://gc.zgo.at/count.js';
+  s.dataset.goatcounter = `https://${GOATCOUNTER_CODE}.goatcounter.com/count`;
+  document.head.appendChild(s);
+})();
+
 const $ = (sel, el = document) => el.querySelector(sel);
 const $$ = (sel, el = document) => Array.from(el.querySelectorAll(sel));
 
