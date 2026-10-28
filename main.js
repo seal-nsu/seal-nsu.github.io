@@ -5,7 +5,7 @@
 
 /* ---------- Visitor analytics (GoatCounter) ----------
    Put your GoatCounter site code here (the part before .goatcounter.com). Leave '' to disable. */
-const GOATCOUNTER_CODE = '';
+const GOATCOUNTER_CODE = 'seal-nsu';
 (function () {
   if (!GOATCOUNTER_CODE) return;
   const s = document.createElement('script');
