@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>SEAL Admin</title>
+<style>
+:root{--bg:#f5f7f8;--card:#fff;--line:#d9e0e4;--text:#16232b;--dim:#5b6b75;--acc:#0f766e;--accfg:#fff;--danger:#b23b3b;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0f171c;--card:#17232a;--line:#2a3a43;--text:#e6eef2;--dim:#93a5b0;--acc:#2dd4bf;--accfg:#06201d;--danger:#f08a8a;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.hidden{display:none!important}
+.dim{color:var(--dim)}
+.btn{background:var(--acc);color:var(--accfg);border:1px solid var(--acc);border-radius:8px;padding:9px 16px;font:inherit;font-weight:600;cursor:pointer;display:inline-block}
+.btn.sm{padding:4px 10px;font-size:13px}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--line)}
+.btn.danger{background:transparent;color:var(--danger);border-color:var(--danger)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+input,textarea,select{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit}
+textarea{resize:vertical}
+#login{max-width:360px;margin:12vh auto;padding:28px;background:var(--card);border:1px solid var(--line);border-radius:14px}
+#login h1{margin:0 0 4px;font-size:22px}
+#login label,.f{display:block;margin-top:14px}
+.f span{display:block;font-size:12px;color:var(--dim);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+#login .btn{width:100%;margin-top:18px}
+.err{color:var(--danger);margin-top:12px;min-height:20px;font-size:14px}
+.top{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding:10px 20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.top b{font-size:17px;margin-right:auto}
+#status{font-size:13px;color:var(--dim)}
+#status.bad{color:var(--danger)}
+.tabs{display:flex;gap:6px;padding:14px 20px 0;flex-wrap:wrap}
+.tabs button{background:transparent;border:1px solid var(--line);color:var(--text);border-radius:999px;padding:6px 16px;font:inherit;cursor:pointer}
+.tabs button.on{background:var(--acc);color:var(--accfg);border-color:var(--acc)}
+main{max-width:920px;margin:0 auto;padding:10px 20px 80px}
+.sh{display:flex;justify-content:space-between;align-items:center;margin:26px 0 10px}
+.sh h2{margin:0;font-size:18px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.ih{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ih b{margin-right:auto;overflow-wrap:anywhere}
+.acts{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.acts select{width:auto;padding:4px 8px;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0 16px}
+.img{display:flex;gap:8px;align-items:center}
+.th{width:44px;height:44px;border-radius:50%;background:var(--bg);border:1px solid var(--line);overflow:hidden;flex-shrink:0}
+.th img{width:100%;height:100%;object-fit:cover}
+</style>
+</head>
+<body>
+
+<form id="login">
+  <h1>SEAL Admin</h1>
+  <div class="dim">Sign in to edit the website.</div>
+  <label>Username<input id="u" autocomplete="username" required></label>
+  <label>Password<input id="p" type="password" autocomplete="current-password" required></label>
+  <button class="btn" id="lbtn">Sign in</button>
+  <div class="err" id="lerr"></div>
+</form>
+
+<div id="admin" class="hidden">
+  <div class="top">
+    <b>SEAL Admin</b>
+    <span id="status"></span>
+    <button class="btn" id="save" disabled>Save changes</button>
+    <button class="btn ghost" id="out">Log out</button>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <main id="app"></main>
+</div>
+
+<datalist id="roles-faculty"><option>Associate Professor, Director</option><option>Assistant Professor, Co-Director</option></datalist>
+<datalist id="roles-seniorResearchAssistants"><option>Senior Research Assistant</option></datalist>
+<datalist id="roles-researchAssistants"><option>Research Assistant</option></datalist>
+<datalist id="roles-studentMembers"><option>Student Member</option></datalist>
+
+<script>
+const API = 'https://seal-nsu.nsuseal.workers.dev';
+const GROUPS = { faculty:'Faculty', seniorResearchAssistants:'Senior Research Assistants', researchAssistants:'Research Assistants', studentMembers:'Student Members' };
+const ROLES = { faculty:'Assistant Professor, Co-Director', seniorResearchAssistants:'Senior Research Assistant', researchAssistants:'Research Assistant', studentMembers:'Student Member' };
+const F = {
+  member:[['name','Name'],['role','Role','roles'],['photo','Photo','image'],['profileUrl','Portfolio URL'],['scholarUrl','Scholar URL']],
+  project:[['title','Title'],['status','Status','select:Ongoing,Completed'],['description','Description','area'],['demoUrl','Demo URL'],['githubUrl','GitHub URL']],
+  pub:[['title','Title','area'],['authors','Authors','area'],['venue','Venue'],['year','Year'],['pdfUrl','PDF URL'],['doiUrl','DOI URL']],
+  news:[['date','Date','date'],['text','Text','area']],
+  focus:[['title','Title'],['blurb','Description','area']]
+};
+const NEW = {
+  member:()=>({name:'',role:'',photo:'',profileUrl:'',scholarUrl:''}),
+  project:()=>({title:'',status:'Ongoing',description:'',demoUrl:'',githubUrl:''}),
+  pub:()=>({title:'',authors:'',venue:'',year:String(new Date().getFullYear()),pdfUrl:'',doiUrl:''}),
+  news:()=>({date:new Date().toISOString().slice(0,10),text:''}),
+  focus:()=>({title:'',blurb:''})
+};
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let token = sessionStorage.getItem('seal_t') || '', data = null, sha = '', dirty = false, tab = 'members';
+const previews = {};
+
+/* ---------- API ---------- */
+async function api(path, method = 'GET', body) {
+  const r = await fetch(API + path, {
+    method,
+    headers: { 'Content-Type':'application/json', ...(token ? { Authorization:'Bearer ' + token } : {}) },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 401 && path !== '/login') { logout(); throw new Error('Session expired. Please sign in again.'); }
+  if (!r.ok) throw new Error(j.error || 'Error ' + r.status);
+  return j;
+}
+
+/* ---------- auth ---------- */
+$('#login').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  $('#lerr').textContent = ''; $('#lbtn').disabled = true;
+  try {
+    const j = await api('/login', 'POST', { username:$('#u').value.trim(), password:$('#p').value });
+    token = j.token; sessionStorage.setItem('seal_t', token); $('#p').value = '';
+    await start();
+  } catch (err) { $('#lerr').textContent = err.message; }
+  $('#lbtn').disabled = false;
+});
+
+function logout() {
+  token = ''; sessionStorage.removeItem('seal_t'); data = null;
+  $('#admin').classList.add('hidden'); $('#login').classList.remove('hidden');
+}
+$('#out').onclick = () => { if (!dirty || confirm('Discard unsaved changes and log out?')) { dirty = false; logout(); } };
+
+async function start() {
+  const j = await api('/data');
+  data = JSON.parse(j.content); sha = j.sha;
+  Object.keys(GROUPS).forEach(g => data.members[g] = data.members[g] || []);
+  data.focusAreas = data.focusAreas || []; data.projects = data.projects || [];
+  data.publications = data.publications || []; data.news = data.news || [];
+  $('#login').classList.add('hidden'); $('#admin').classList.remove('hidden');
+  dirty = false; status('Loaded latest data.'); render();
+}
+
+/* ---------- helpers ---------- */
+const getP = p => p.split('.').reduce((o, k) => o[k], data);
+function setP(p, v) { const a = p.split('.'), last = a.pop(); a.reduce((o, k) => o[k], data)[last] = v; }
+function status(msg, bad) { const s = $('#status'); s.textContent = msg; s.className = bad ? 'bad' : ''; }
+function mark() { dirty = true; $('#save').disabled = false; status('Unsaved changes'); }
+
+/* ---------- rendering ---------- */
+function field(l, i, k, label, type, v, g) {
+  const a = `data-l="${l}" data-i="${i}" data-k="${k}"`;
+  let inp;
+  if (type === 'area') inp = `<textarea ${a} rows="3">${esc(v)}</textarea>`;
+  else if (type && type.startsWith('select:')) inp = `<select ${a}>${type.slice(7).split(',').map(o => `<option${o === v ? ' selected' : ''}>${o}</option>`).join('')}</select>`;
+  else if (type === 'roles') inp = `<input ${a} list="roles-${g}" value="${esc(v)}">`;
+  else if (type === 'image') inp = `<div class="img"><div class="th">${v ? `<img src="${esc(previews[v] || v)}" alt="" onerror="this.remove()">` : ''}</div><input ${a} value="${esc(v)}" placeholder="images/photo.jpg"><label class="btn sm">Upload<input type="file" accept="image/*" hidden data-act="img" ${a}></label></div>`;
+  else inp = `<input ${a} type="${type === 'date' ? 'date' : 'text'}" value="${esc(v)}">`;
+  return `<label class="f"><span>${label}</span>${inp}</label>`;
+}
+
+function card(l, i, fields, title, g) {
+  const it = getP(l)[i], b = `data-l="${l}" data-i="${i}"`;
+  const move = g ? `<select data-act="move" ${b}>${Object.entries(GROUPS).map(([k, n]) => `<option value="${k}"${k === g ? ' selected' : ''}>${n}</option>`).join('')}</select>` : '';
+  return `<div class="item"><div class="ih"><b>${esc(title || '(untitled)')}</b><span class="acts">${move}
+    <button class="btn sm ghost" data-act="up" ${b}>↑</button><button class="btn sm ghost" data-act="down" ${b}>↓</button>
+    <button class="btn sm danger" data-act="del" ${b}>Delete</button></span></div>
+    <div class="grid">${fields.map(([k, lab, t]) => field(l, i, k, lab, t, it[k] ?? '', g)).join('')}</div></div>`;
+}
+
+function listSec(title, l, type, titleKey, g) {
+  const arr = getP(l);
+  return `<section><div class="sh"><h2>${title}</h2><button class="btn sm" data-act="add" data-l="${l}" data-t="${type}" data-g="${g || ''}">+ Add</button></div>
+    ${arr.map((it, i) => card(l, i, F[type], it[titleKey], g)).join('') || '<p class="dim">Nothing here yet.</p>'}</section>`;
+}
+
+function objField(p, label, area) {
+  const v = esc(getP(p));
+  return `<label class="f"><span>${label}</span>${area ? `<textarea data-p="${p}" rows="4">${v}</textarea>` : `<input data-p="${p}" value="${v}">`}</label>`;
+}
+
+const TABS = { members:'Team', projects:'Projects', publications:'Publications', news:'News', site:'Site info' };
+
+function render() {
+  $('#tabs').innerHTML = Object.entries(TABS).map(([k, n]) => `<button data-tab="${k}" class="${k === tab ? 'on' : ''}">${n}</button>`).join('');
+  let h = '';
+  if (tab === 'members') h = Object.entries(GROUPS).map(([g, n]) => listSec(n, 'members.' + g, 'member', 'name', g)).join('');
+  if (tab === 'projects') h = listSec('Projects', 'projects', 'project', 'title');
+  if (tab === 'publications') h = listSec('Publications', 'publications', 'pub', 'title');
+  if (tab === 'news') h = listSec('News', 'news', 'news', 'text');
+  if (tab === 'site') h = `<section><div class="sh"><h2>Lab details</h2></div><div class="item">
+    ${objField('lab.tagline', 'Tagline')}${objField('lab.mission', 'Mission', true)}${objField('lab.email', 'Email')}${objField('lab.address', 'Address')}</div></section>
+    ${listSec('Research focus areas', 'focusAreas', 'focus', 'title')}`;
+  $('#app').innerHTML = h;
+}
+
+/* ---------- events ---------- */
+$('#tabs').addEventListener('click', ev => { const t = ev.target.dataset.tab; if (t) { tab = t; render(); } });
+
+$('#app').addEventListener('input', ev => {
+  const d = ev.target.dataset;
+  if (d.act) return;
+  if (d.p) setP(d.p, ev.target.value);
+  else if (d.l) getP(d.l)[d.i][d.k] = ev.target.value;
+  else return;
+  mark();
+});
+
+$('#app').addEventListener('click', ev => {
+  const b = ev.target.closest('button[data-act]'); if (!b) return;
+  const { act, l, i, t, g } = b.dataset, arr = l ? getP(l) : null, n = Number(i);
+  if (act === 'add') { const it = NEW[t](); if (g) it.role = ROLES[g]; arr.push(it); }
+  else if (act === 'del') { if (!confirm('Delete this entry?')) return; arr.splice(n, 1); }
+  else if (act === 'up' && n > 0) [arr[n - 1], arr[n]] = [arr[n], arr[n - 1]];
+  else if (act === 'down' && n < arr.length - 1) [arr[n + 1], arr[n]] = [arr[n], arr[n + 1]];
+  else return;
+  mark(); render();
+});
+
+$('#app').addEventListener('change', async ev => {
+  const el = ev.target, d = el.dataset;
+  if (d.act === 'move') {
+    const from = d.l.split('.')[1], to = el.value, it = getP(d.l).splice(Number(d.i), 1)[0];
+    if (it.role === ROLES[from]) it.role = ROLES[to];
+    data.members[to].push(it); mark(); render();
+  }
+  if (d.act === 'img' && el.files[0]) {
+    const it = getP(d.l)[d.i];
+    try {
+      status('Uploading image…');
+      const url = await resize(el.files[0]);
+      const slug = (it.name || 'image').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'image';
+      const path = `images/${slug}-${Date.now().toString(36)}.jpg`;
+      await api('/upload', 'POST', { path, content: url.split(',')[1] });
+      previews[path] = url; it[d.k] = path; mark(); render(); status('Image uploaded. Remember to Save changes.');
+    } catch (err) { status(err.message || 'Upload failed', true); }
+  }
+});
+
+function resize(file, max = 800) {
+  return new Promise((res, rej) => {
+    const img = new Image(), u = URL.createObjectURL(file);
+    img.onload = () => {
+      const s = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement('canvas');
+      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(u); res(c.toDataURL('image/jpeg', 0.85));
+    };
+    img.onerror = () => rej(new Error('Could not read that image'));
+    img.src = u;
+  });
+}
+
+$('#save').onclick = async () => {
+  const bad = Object.keys(GROUPS).some(g => data.members[g].some(m => !m.name.trim()));
+  if (bad) return status('Every member needs a name.', true);
+  $('#save').disabled = true; status('Saving…');
+  try {
+    const r = await api('/data', 'PUT', { content: JSON.stringify(data), sha, message: 'Update site data via admin' });
+    sha = r.sha; dirty = false; status('Saved. The live site updates in about a minute.');
+  } catch (err) { $('#save').disabled = false; status(err.message, true); }
+};
+
+window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+if (token) start().catch(() => logout());
+</script>
+</body>
+</html>

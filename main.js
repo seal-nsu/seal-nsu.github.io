@@ -86,7 +86,8 @@ function renderHome(data) {
   if (mission) mission.textContent = lab.mission;
 
   // Stat strip (hero)
-  const totalPeople = members.faculty.length + members.researchAssistants.length;
+  const allGroups = [members.faculty, members.seniorResearchAssistants, members.researchAssistants, members.studentMembers];
+  const totalPeople = allGroups.reduce((n, g) => n + (g ? g.length : 0), 0);
   const stats = [
     { num: String(members.faculty.length).padStart(2, '0'), label: 'Faculty' },
     { num: String(members.researchAssistants.length).padStart(2, '0'), label: 'Research Assistants' },
@@ -129,7 +130,7 @@ function renderHome(data) {
 
   const teamCount = $('#team-count');
   if (teamCount) {
-    teamCount.textContent = `+ ${totalPeople - 1} more researchers across faculty and research assistants`;
+    teamCount.textContent = `+ ${totalPeople - 1} more members across faculty, researchers and students`;
   }
 
   // Projects Teaser
@@ -159,22 +160,17 @@ function renderHome(data) {
 }
 
 /* ---------- Other page renderers ---------- */
-function memberCardHTML(member) {
-  return `
-    <div class="member-card">
-      <div class="avatar">${escapeHTML(initials(member.name))}</div>
-      <div class="member-info">
-        <div class="name">${escapeHTML(member.name)}</div>
-        <div class="role">${escapeHTML(member.role)}</div>
-      </div>
-    </div>`;
-}
-
 function renderMembers(members) {
-  const facultyGrid = $('#faculty-grid');
-  const raGrid = $('#ra-grid');
-  if (facultyGrid) facultyGrid.innerHTML = members.faculty.map(memberCardHTML).join('');
-  if (raGrid) raGrid.innerHTML = members.researchAssistants.map(memberCardHTML).join('');
+  const groups = {
+    'faculty-grid': members.faculty,
+    'senior-grid': members.seniorResearchAssistants,
+    'ra-grid': members.researchAssistants,
+    'student-grid': members.studentMembers
+  };
+  Object.entries(groups).forEach(([id, list]) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = (list || []).map(memberCardHTML).join('');
+  });
 }
 
 function projectCardHTML(project, idx) {
@@ -365,61 +361,31 @@ function initGallery() {
 initGallery();
 
 function renderFacultyPreview(members) {
-
   const container = document.getElementById("faculty-preview");
   if (!container) return;
-
-  const faculty = members.faculty.slice(0, 3);
-
-  container.innerHTML = faculty.map(m => `
-        <div class="member-card">
-
-            <div class="avatar">
-                ${m.photo
-      ? `<img src="${m.photo}" alt="${escapeHTML(m.name)}">`
-      : escapeHTML(initials(m.name))
-    }
-            </div>
-
-            <div class="member-info">
-                <div class="name">${escapeHTML(m.name)}</div>
-                <div class="role">${escapeHTML(m.role)}</div>
-            </div>
-
-        </div>
-    `).join("");
-
+  container.innerHTML = members.faculty.slice(0, 3).map(memberCardHTML).join("");
 }
-renderFacultyPreview(data.members);
 
 function memberCardHTML(member) {
-
   const avatar = member.photo
     ? `<img src="${escapeHTML(member.photo)}" alt="${escapeHTML(member.name)}">`
     : escapeHTML(initials(member.name));
 
   const content = `
-      <div class="member-card">
-          <div class="avatar">
-              ${avatar}
-          </div>
-
-          <div class="member-info">
-              <div class="name">${escapeHTML(member.name)}</div>
-              <div class="role">${escapeHTML(member.role)}</div>
-          </div>
+    <div class="member-card">
+      <div class="avatar">${avatar}</div>
+      <div class="member-info">
+        <div class="name">${escapeHTML(member.name)}</div>
+        <div class="role">${escapeHTML(member.role)}</div>
       </div>
-  `;
+    </div>`;
 
+  // Whole card links to the member's portfolio (Scholar is reachable from there).
   if (member.profileUrl) {
-      return `
-      <a href="${escapeHTML(member.profileUrl)}"
-         class="member-link"
-         target="_blank"
-         rel="noopener">
-          ${content}
-      </a>`;
+    return `
+    <a href="${escapeHTML(member.profileUrl)}" class="member-link" target="_blank" rel="noopener">
+      ${content}
+    </a>`;
   }
-
   return content;
 }

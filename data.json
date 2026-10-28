@@ -34,60 +34,117 @@
   ],
   "members": {
     "faculty": [
-  {
-    "name": "Dr. Mohammad Ashrafuzzaman Khan",
-    "role": "Associate Professor, Lab Director",
-    "photo": "azk.jpeg",
-    "profileUrl": "https://ece.northsouth.edu/people/dr-mohammad-ashrafuzzaman-khan/"
-  },
-  {
-    "name": "Dr. Mohammad Abdul Qayum",
-    "role": "Assistant Professor, Lab Operations Head",
-    "photo": "maqm.jpeg",
-    "profileUrl": "https://ece.northsouth.edu/people/dr-mohammad-abdul-qayum/"
-  },
-  {
-    "name": "Dr. Mohsin Sajjad",
-    "role": "Assistant Professor, Quality Assurance Manager",
-    "photo": "moj.jpeg",
-    "profileUrl": "https://ece.northsouth.edu/people/dr-mohsin-sajjad/"
-  }
-],
+      {
+        "name": "Dr. Mohammad Ashrafuzzaman Khan",
+        "role": "Associate Professor, Director",
+        "photo": "azk.jpeg",
+        "profileUrl": "https://ece.northsouth.edu/people/dr-mohammad-ashrafuzzaman-khan/"
+      },
+      {
+        "name": "Dr. Mohammad Abdul Qayum",
+        "role": "Assistant Professor, Co-Director",
+        "photo": "maqm.jpeg",
+        "profileUrl": "https://ece.northsouth.edu/people/dr-mohammad-abdul-qayum/"
+      },
+      {
+        "name": "Dr. Mohsin Sajjad",
+        "role": "Assistant Professor, Co-Director",
+        "photo": "moj.jpeg",
+        "profileUrl": "https://ece.northsouth.edu/people/dr-mohsin-sajjad/"
+      }
+    ],
+    "seniorResearchAssistants": [
+      {
+        "name": "Ahmed Faizul Haque Dhrubo",
+        "role": "Senior Research Assistant",
+        "photo": "dhrubo.jpeg",
+        "profileUrl": "https://flagship-research-po-281a.bolt.host/"
+      }
+    ],
     "researchAssistants": [
-  {
-    "name": "Ahmed Faizul Haque Dhrubo",
-    "role": "Research Assistant",
-    "photo": "dhrubo.jpeg",
-    "profileUrl": "https://flagship-research-po-281a.bolt.host/"
-  },
-  {
-    "name": "Souvik Pramanik",
-    "role": "Research Assistant",
-    "photo": "souvik.jpeg",
-    "profileUrl": "https://souvikpramanik.vercel.app/"
-  }
-  ,
-  {
-    "name": "Saif Ahmed",
-    "role": "Research Assistant",
-    "photo": "saif.jpeg",
-    "profileUrl": "https://saifahmedarfi.github.io/"
-  }
-  ,
-  {
-    "name": "Asadulla Hil Galib",
-    "role": "Research Assistant",
-    "photo": "galib.jpeg",
-    "profileUrl": "https://theboredman.dev/"
-  }
-  ,
-  {
-    "name": "Most Aysha Siddika Sumona",
-    "role": "Research Assistant",
-    "photo": "aysha.jpeg",
-    "profileUrl": "https://github.com/AyshaSiddika1"
-  }
-]
+      {
+        "name": "Souvik Pramanik",
+        "role": "Research Assistant",
+        "photo": "souvik.jpeg",
+        "profileUrl": "https://souvikpramanik.vercel.app/"
+      },
+      {
+        "name": "Saif Ahmed",
+        "role": "Research Assistant",
+        "photo": "saif.jpeg",
+        "profileUrl": "https://saifahmedarfi.github.io/"
+      },
+      {
+        "name": "Asadulla Hil Galib",
+        "role": "Research Assistant",
+        "photo": "galib.jpeg",
+        "profileUrl": "https://theboredman.dev/"
+      },
+      {
+        "name": "Most Aysha Siddika Sumona",
+        "role": "Research Assistant",
+        "photo": "aysha.jpeg",
+        "profileUrl": "https://github.com/AyshaSiddika1"
+      },
+      {
+        "name": "Rafiul Rabbi Zahid",
+        "role": "Research Assistant",
+        "photo": "",
+        "profileUrl": "https://rafiul-zahid.vercel.app",
+        "scholarUrl": ""
+      },
+      {
+        "name": "Atikul Islam Munna",
+        "role": "Research Assistant",
+        "photo": "",
+        "profileUrl": "https://aimunna.me/",
+        "scholarUrl": "https://scholar.google.com/citations?hl=en&user=SRi5CiEAAAAJ"
+      }
+    ],
+    "studentMembers": [
+      {
+        "name": "S.M. Riaz Rahman Antu",
+        "role": "Student Member",
+        "photo": "",
+        "profileUrl": "",
+        "scholarUrl": ""
+      },
+      {
+        "name": "Md. Ibrahim Khalil",
+        "role": "Student Member",
+        "photo": "",
+        "profileUrl": "",
+        "scholarUrl": ""
+      },
+      {
+        "name": "Shak Mohammad Abyad",
+        "role": "Student Member",
+        "photo": "",
+        "profileUrl": "",
+        "scholarUrl": ""
+      },
+      {
+        "name": "Samiur Rahman Alif",
+        "role": "Student Member",
+        "photo": "",
+        "profileUrl": "https://samiurrahmanalif.github.io/samiurrahmannalif/",
+        "scholarUrl": ""
+      },
+      {
+        "name": "Tariqul Islam Sahosh",
+        "role": "Student Member",
+        "photo": "",
+        "profileUrl": "",
+        "scholarUrl": ""
+      },
+      {
+        "name": "Mohammad Jawad Bin Aziz",
+        "role": "Student Member",
+        "photo": "",
+        "profileUrl": "",
+        "scholarUrl": ""
+      }
+    ]
   },
   "projects": [
     {
