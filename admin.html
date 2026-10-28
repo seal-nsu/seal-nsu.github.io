@@ -269,74 +269,58 @@ function render() {
     ${listSec('Research focus areas', 'focusAreas', 'focus', 'title')}`;
   if (tab === 'insights') h = insightsHTML();
   $('#app').innerHTML = h;
-  if (tab === 'insights' && gc.code && gc.token && !gcData && !gcErr && !gcBusy) loadInsights();
+  if (tab === 'insights' && !gcData && !gcErr && !gcBusy) loadInsights();
 }
 
-/* ---------- insights (GoatCounter) ---------- */
-function insightsHTML() {
-  if (!gc.code || !gc.token) return `<section><div class="sh"><h2>Website insights</h2></div><div class="item">
-    <p class="dim">Visitor stats come from GoatCounter (free). Enter your site code and a read-only API token. They are saved encrypted on this device.</p>
-    <label class="f"><span>GoatCounter site code</span><input id="gcc" value="${esc(gc.code)}" placeholder="e.g. seal-nsu"></label>
-    <label class="f"><span>API token (read statistics)</span><input id="gct" type="password" autocomplete="off"></label>
-    <p><button class="btn" data-gc="save">Save</button></p></div></section>`;
-  const body = gcBusy ? '<p class="dim">Loading…</p>' : gcErr ? `<div class="item"><p style="color:var(--danger);margin:0">${esc(gcErr)}</p></div>` : gcData ? viewHTML(gcData) : '';
-  return `<section><div class="sh"><h2>Website insights</h2><span class="acts">
-    ${[7, 30, 90].map(n => `<button class="btn sm ${n === gcDays ? '' : 'ghost'}" data-gc="range" data-n="${n}">${n}d</button>`).join('')}
-    <button class="btn sm ghost" data-gc="refresh">Refresh</button>
-    <a class="btn sm ghost" target="_blank" rel="noopener" href="https://${esc(gc.code)}.goatcounter.com">Full dashboard ↗</a>
-    <button class="btn sm ghost" data-gc="reset">Settings</button></span></div>${body}</section>`;
+/* ---------- insights (GoatCounter public counters) ---------- */
+const GC_CODE = 'seal-nsu';
+const GC_PAGES = [['/', 'Home'], ['/members.html', 'Team'], ['/projects.html', 'Projects'], ['/publications.html', 'Publications'], ['/news.html', 'News'], ['/gallery.html', 'Gallery'], ['/contact.html', 'Contact']];
+
+async function gcCount(path) {
+  const r = await fetch(`https://${GC_CODE}.goatcounter.com/counter/${encodeURIComponent(path)}.json`);
+  if (r.status === 404) return 0;
+  if (!r.ok) throw new Error('GoatCounter answered ' + r.status);
+  const j = await r.json();
+  return Number(String(j.count ?? 0).replace(/[^\d]/g, '')) || 0;
 }
 
 function listCard(title, arr) {
-  const rows = arr.slice(0, 8).map(r => `<div class="row"><span>${esc(r.name || '(direct)')}</span><b>${r.count ?? 0}</b></div>`).join('');
-  return `<div class="item"><b>${title}</b>${rows || '<p class="dim" style="margin:6px 0 0">No data yet.</p>'}</div>`;
+  const rows = arr.slice(0, 10).map(r => `<div class="row"><span>${esc(r.name)}</span><b>${r.count}</b></div>`).join('');
+  return `<div class="item"><b>${title}</b>${rows}</div>`;
 }
 
-function viewHTML(d) {
-  const days = (d.total.stats || []).map(s => ({ day:s.day, n:s.daily ?? s.count ?? 0 }));
-  const max = Math.max(1, ...days.map(x => x.n));
-  const chart = days.length ? `<div class="item"><b>Visitors per day</b><div class="bars">${days.map(x => `<i title="${esc(x.day)}: ${x.n}" style="height:${Math.max(3, Math.round(x.n / max * 100))}%"></i>`).join('')}</div></div>` : '';
-  const pages = (d.hits.hits || []).map(h => ({ name:h.path, count:h.count }));
-  return `<div class="cards">
-    <div class="stat"><span>Visitors (${gcDays} days)</span><b>${d.total.total ?? '–'}</b></div>
-    <div class="stat"><span>Pages visited</span><b>${pages.length}</b></div>
-    <div class="stat"><span>Top page</span><b style="font-size:16px">${esc(pages[0]?.name || '–')}</b></div></div>${chart}
-    <div class="two">${listCard('Top pages', pages)}${listCard('Where visitors come from', d.refs.stats || [])}${listCard('Countries', d.loc.stats || [])}${listCard('Browsers', d.br.stats || [])}</div>`;
-}
-
-async function gcGet(path) {
-  const q = `?start=${new Date(Date.now() - gcDays * 864e5).toISOString()}&end=${new Date().toISOString()}`;
-  const r = await fetch(`https://${gc.code}.goatcounter.com/api/v0/stats/${path}${q}`, { headers:{ Authorization:'Bearer ' + gc.token, 'Content-Type':'application/json' } });
-  if (!r.ok) throw new Error(`GoatCounter answered ${r.status}`);
-  return r.json();
+function insightsHTML() {
+  let body = '';
+  if (gcBusy) body = '<p class="dim">Loading…</p>';
+  else if (gcErr) body = `<div class="item"><p style="color:var(--danger);margin:0">${esc(gcErr)}</p></div>`;
+  else if (gcData) {
+    const top = gcData.pages[0];
+    body = `<div class="cards">
+      <div class="stat"><span>Total visitors (all time)</span><b>${gcData.total.toLocaleString()}</b></div>
+      <div class="stat"><span>Most visited page</span><b style="font-size:18px">${esc(top && top.count ? top.name : '–')}</b></div></div>
+      ${listCard('Visitors per page', gcData.pages)}
+      <p class="dim" style="font-size:13px">For charts, countries, referrers and browsers, open the full dashboard.</p>`;
+  }
+  return `<section><div class="sh"><h2>Website insights</h2><span class="acts">
+    <button class="btn sm ghost" data-gc="refresh">Refresh</button>
+    <a class="btn sm" target="_blank" rel="noopener" href="https://${GC_CODE}.goatcounter.com">Full dashboard ↗</a></span></div>${body}</section>`;
 }
 
 async function loadInsights() {
   gcBusy = true; gcErr = ''; render();
   try {
-    const [total, hits, refs, loc, br] = await Promise.all(['total', 'hits', 'toprefs', 'locations', 'browsers'].map(gcGet));
-    gcData = { total, hits, refs, loc, br };
+    const [total, ...pages] = await Promise.all(['TOTAL', ...GC_PAGES.map(p => p[0])].map(gcCount));
+    gcData = { total, pages: GC_PAGES.map((p, i) => ({ name:p[1], count:pages[i] })).sort((x, y) => y.count - x.count) };
   } catch (err) {
     gcErr = err instanceof TypeError
-      ? 'The browser could not get data from GoatCounter (wrong site code, or the request was blocked). Use "Full dashboard" instead.'
-      : err.message + '. Check the site code, and that the token has permission to read statistics.';
+      ? 'The browser could not reach GoatCounter. Use "Full dashboard" instead.'
+      : err.message + '. In GoatCounter, open Settings and turn on "Allow adding visitor counts on your website".';
   }
   gcBusy = false; render();
 }
 
-$('#app').addEventListener('click', async ev => {
-  const b = ev.target.closest('[data-gc]'); if (!b) return;
-  const a = b.dataset.gc;
-  if (a === 'save') {
-    const code = $('#gcc').value.trim().replace(/^https?:\/\//, '').split('.')[0].toLowerCase(), tk = $('#gct').value.trim();
-    if (!code || !tk) return status('Enter both the site code and the API token.', true);
-    gc = { code, token:tk }; gcData = null; gcErr = '';
-    try { await seal(cred.u, cred.p, JSON.stringify({ gh:token, gc })); status('Insights settings saved on this device.'); } catch { status('Could not save the settings.', true); }
-    render();
-  }
-  if (a === 'range') { gcDays = Number(b.dataset.n); gcData = null; gcErr = ''; render(); }
-  if (a === 'refresh') { gcData = null; gcErr = ''; render(); }
-  if (a === 'reset') { gc.token = ''; gcData = null; gcErr = ''; render(); }
+$('#app').addEventListener('click', ev => {
+  if (ev.target.closest('[data-gc="refresh"]')) { gcData = null; gcErr = ''; render(); }
 });
 
 /* ---------- events ---------- */
